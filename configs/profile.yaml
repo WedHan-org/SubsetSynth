@@ -1,0 +1,14 @@
+_base_: base.yaml
+run:
+  name: SubsetSynth_v2_0b_PROFILE
+  scientific_status: ENGINEERING_ONLY
+training:
+  micro_batch_size: 2
+  effective_batch_size: 6
+  max_epochs: 1
+  min_epochs: 1
+  val_interval: 1
+  early_stopping: false
+  patience_validation_events: 1
+logging:
+  log_sampler_events: true

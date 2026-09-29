@@ -1,0 +1,7 @@
+_base_: train.yaml
+run:
+  name: SubsetSynth_v2_0b_PHYSICS_DIAGNOSTIC
+  scientific_status: PRE_REGISTERED_DIAGNOSTIC_VARIANT_ONLY_AFTER_BASELINE_NO_GO
+physics:
+  enabled: true
+  weight: 1.5

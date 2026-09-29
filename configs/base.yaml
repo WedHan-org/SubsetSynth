@@ -1,0 +1,149 @@
+run:
+  name: SubsetSynth_v2_0b_hierarchical_balanced
+  freeze_version: v1.2
+  scientific_status: DRAFT_REVIEW_REQUIRED_BEFORE_FULL_RUN
+
+paths:
+  project_root: /path/to/local/storage/SubsetSynth_v2_0b_hierarchical_balanced
+  output_root: /path/to/local/storage/SubsetSynth_v2_0b_runs
+
+model:
+  name: SubsetSynthV2
+  modalities: [T1, T2, FS]
+  img_size: 512
+  token_dim: 128
+  transformer_layers: 4
+  transformer_heads: 8
+  transformer_ff_dim: 1024
+
+# Authoritative recovered data/split locations.
+data:
+  img_size: 512
+  num_workers: 6
+  pin_memory: true
+  persistent_workers: true
+  A:
+    dir: /path/to/local/storage/DatasetA_L/train_npy
+    split_csv: /path/to/local/storage/DatasetA_L/split_info.csv
+  B:
+    dir: /path/to/local/storage/DatasetB_C/train_npy
+    split_csv: /path/to/local/storage/DatasetB_C/split_c_info.csv
+  C2:
+    dir: /path/to/local/storage/DatasetC_L/train_npy/T1_T2
+    split_csv: /path/to/local/storage/DatasetC_L/split_T1_T2_info.csv
+  C3:
+    dir: /path/to/local/storage/DatasetC_L/train_npy/T1_T2FS
+    split_csv: /path/to/local/storage/DatasetC_L/split_T1_T2FS_info.csv
+
+# Explicit provenance contract for the historical NPY representation.
+data_schema:
+  A:
+    input_order: [T1, T2]
+    label_order: [FS]
+  B:
+    input_order: [T1, T2]
+    label_order: [FS]
+  C2:
+    input_order: [T1]
+    label_order: [T2]
+  C3:
+    input_order: [T1]
+    label_order: [FS]
+
+locks:
+  npy_semantics_lock: /path/to/local/storage/SubsetSynth_v2_0b_hierarchical_balanced/locks/npy_semantics_lock.json
+  mapping_cohort_support_lock: /path/to/local/storage/SubsetSynth_v2_0b_hierarchical_balanced/locks/mapping_cohort_support_lock.json
+
+augmentation:
+  enabled: true
+  probability: 0.60
+  gamma: [0.85, 1.15]
+  bias_strength: 0.15
+  source_rician_sigma: 0.015
+
+optimizer:
+  lr: 0.0001
+  betas: [0.5, 0.999]
+  weight_decay: 0.0001
+  grad_clip_norm: 1.0
+
+amp:
+  # Numerical execution policy only; scientific loss/objective are unchanged.
+  enabled: true
+  init_scale: 8192.0
+  growth_factor: 2.0
+  backoff_factor: 0.5
+  growth_interval: 1000000
+  # Do not silently count a skipped optimizer step in formal runs.
+  fail_on_overflow: false
+  recover_overflow: true
+  max_consecutive_overflows: 3
+  min_scale: 1024.0
+
+# v2.0b baseline is fidelity-first. Physics/GAN/VGG/NCE/Cycle/distillation are OFF.
+loss:
+  l1: 8.0
+  ssim: 1.0
+  frequency: 0.5
+  edge: 1.0
+
+physics:
+  enabled: false
+  weight: 1.5
+  status: PRE_REGISTERED_DIAGNOSTIC_VARIANT_ONLY
+
+# Equal-cohort sampling is a Monte Carlo proposal, not the scientific fairness target.
+# The frozen target objective is imposed by hierarchical importance weights.
+sampling:
+  cohort_proposal:
+    A: 0.25
+    B: 0.25
+    C2: 0.25
+    C3: 0.25
+  subset_policy: uniform_randomized_bag
+  objective: mapping_equal_and_supporting_cohorts_equal_within_mapping
+
+training:
+  micro_batch_size: 2
+  effective_batch_size: 6
+  max_epochs: 200
+  min_epochs: 30
+  val_interval: 2
+  early_stopping: true
+  patience_validation_events: 15
+  min_delta_psnr_db: 0.02
+  ema_decay: 0.999
+  # num_samples is truncated to a complete effective-batch multiple; no partial accumulation window.
+  complete_effective_batches_only: true
+
+checkpoint:
+  ssim_tie_psnr_db: 0.05
+  keep_milestones: [100, 200]
+
+reproducibility:
+  seed: 20260821
+  deterministic: false
+
+logging:
+  log_sampler_events: true
+
+# Common evaluator used for v1.8.2 and v2.0.
+evaluation:
+  evaluator_version: SubsetSynthCommonEval_v2
+  batch_size: 1
+  ssim_window: 11
+  ssim_sigma: 1.5
+  lpips_net: alex
+
+# Engineering gate. Never use test for these decisions.
+gate:
+  primary_mapping: T1+T2->FS
+  bootstrap_iterations: 10000
+  bootstrap_seed: 20260821
+  psnr_lcb_gt_db: -0.30
+  ssim_lcb_gt: -0.005
+  lpips_ucb_lt: 0.010
+  mapping_balanced_psnr_guardrail_db: -0.50
+
+safety:
+  test_unlock_phrase: YES_I_CONFIRM_MODEL_AND_INFERENCE_ARE_FROZEN

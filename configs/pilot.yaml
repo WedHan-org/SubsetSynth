@@ -1,0 +1,11 @@
+_base_: base.yaml
+run:
+  name: SubsetSynth_v2_0b_PILOT
+  scientific_status: PILOT_ONLY_DO_NOT_USE_TEST
+training:
+  micro_batch_size: 2
+  effective_batch_size: 6
+  max_epochs: 20
+  min_epochs: 20
+  val_interval: 2
+  early_stopping: false

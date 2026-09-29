@@ -1,0 +1,30 @@
+# EVALUATION ONLY. Training code does not read this file.
+vocabulary: [T1, T2, FS]
+
+primitive_single_target:
+  - source: [T1]
+    target: [T2]
+  - source: [T1]
+    target: [FS]
+  - source: [T2]
+    target: [T1]
+  - source: [T2]
+    target: [FS]
+  - source: [FS]
+    target: [T1]
+  - source: [FS]
+    target: [T2]
+  - source: [T1, T2]
+    target: [FS]
+  - source: [T1, FS]
+    target: [T2]
+  - source: [T2, FS]
+    target: [T1]
+
+compositional_multi_target:
+  - source: [T1]
+    target: [T2, FS]
+  - source: [T2]
+    target: [T1, FS]
+  - source: [FS]
+    target: [T1, T2]

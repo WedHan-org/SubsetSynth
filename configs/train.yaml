@@ -1,0 +1,13 @@
+_base_: base.yaml
+run:
+  name: SubsetSynth_v2_0b_FULL
+  scientific_status: FULL_RUN_REVIEW_CONFIG_BEFORE_START
+training:
+  micro_batch_size: 2
+  effective_batch_size: 6
+  max_epochs: 200
+  min_epochs: 30
+  val_interval: 2
+  early_stopping: true
+  patience_validation_events: 15
+  min_delta_psnr_db: 0.02
