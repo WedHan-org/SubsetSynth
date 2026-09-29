@@ -11,8 +11,7 @@ The original source archive and formal run artifacts are preserved separately.
 
 Formal run: SubsetSynth_v2_0b_FULL_train_20260822_122518.
 
-The core Python files in `subsetsynth/` were compared byte-for-byte
-with the original source archive; no differences were found.
+The 21 core Python files in subsetsynth/ match the original source archive after LF/CRLF newline normalization. The public copies differ in line endings but not in Python source content.
 Machine paths in this public copy were replaced with local-path placeholders.
 The resolved configuration is a path-redacted derivative of the original.
 Data, patient-level audit material, generated locks, images, and model weights
