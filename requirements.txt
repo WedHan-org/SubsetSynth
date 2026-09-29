@@ -1,0 +1,6 @@
+# Keep the working AutoDL CUDA/PyTorch build. This file intentionally does NOT pin torch/torchvision.
+numpy>=1.24
+pandas>=2.0
+PyYAML>=6.0
+opencv-python-headless>=4.8
+tqdm>=4.66

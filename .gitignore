@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.npy
+*.dcm
+*.pth
+*.pt
+*.png
+*.zip
+*.tar.gz
+outputs/
+runs/
+locks/
+*.env
