@@ -1,4 +1,4 @@
-# SubsetSynth v2.0b
+# SubsetSynth 
 
 Source code for a target-conditioned spine MRI synthesis model spanning nine mappings among T1-weighted (T1W), T2-weighted (T2W), and fat-suppressed (FS) images: six single-source and three dual-source mappings. The shared model uses source-availability conditioning, a Transformer latent representation, and a target-conditioned decoder.
 
